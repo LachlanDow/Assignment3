@@ -29,43 +29,69 @@ public:
   void insert(ulint,ulint); // insert data associated with key into table
   void erase(ulint);        // remove key and associated data from table
 
-  void rehash(size_t); // sets a new size for the hash table, rehashes the hash table 
+  void rehash(size_t); // sets a new size for the hash table, rehashes the hash table
 
   // extend if necessary
 };
- 
- //intialises table to size of 1
- HashTable::HashTable(){
-  cout << "constucting";
-  this->table = new Table[1];
-  this->num = 11;
 
-  
-  }  
+ //intialises table to size of  1
+ inline HashTable::HashTable(){
+  cout << "constucting"<< endl;
+  Table *temp = new Table(11,list<HashNode>());
+  this->table = temp;
+  this->num = 0;
 
-  HashTable::HashTable(size_t number){
+  }
+
+inline  HashTable::HashTable(size_t number){
     cout << "constucting";
-    this->table = new Table[number]; 
-    this->num = 11;
+    Table *temp = new Table(number, list<HashNode>());
+    this->table = temp;
+    this->num = 0;
 
-    for (int i = 0; i < 11; i++) {
-        this->table.at(i) = new HashNode;
-        this->table.at(i)->value = NULL;
-        this->table.at(i)->key = NULL;
-    }
   }
 
-  size_t HashTable::size(){
-    return this->num;
+  inline size_t HashTable::size(){
+    return this->table->size();
   }
 
-  HashTable::~HashTable(){
-    delete this;
+  inline HashTable::~HashTable(){
+    delete this->table;
   }
-/* Implement the 
+
+  inline size_t HashTable::hash_function(ulint key){
+    return key % this->table->size();
+  }
+
+  inline void HashTable::insert(ulint key ,ulint value){
+     HashNode *temp = new HashNode(key,value);
+     size_t pos = hash_function(key);
+     list<HashNode> mylist= this->table->at(pos);
+
+     for (list<HashNode>::iterator it=mylist.begin(); it != mylist.end(); ++it){
+       if((*it).getKey() == key){
+         throw DUPLICATE_KEY;
+       }
+     }
+     this->table->at(pos).push_back(*temp);
+
+  }
+
+  inline ulint HashTable::getValue(ulint key ){
+    size_t hashPos = hash_function(key);
+    list<HashNode> mylist= this->table->at(hashPos);
+
+    for (list<HashNode>::iterator it=mylist.begin(); it != mylist.end(); ++it){
+      if((*it).getKey() == key){
+        return (*it).getValue();
+      }
+  }
+ return KEY_NOT_FOUND;
+}
+/* Implement the
 - Constructors, Destructor
 - hash_function, insert, getValue methods
-- erase, and rehash methods 
+- erase, and rehash methods
 */
 
 #endif

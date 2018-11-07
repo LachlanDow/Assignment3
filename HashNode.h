@@ -12,16 +12,26 @@ class HashNode {
 public:
 
   // Add constructors, destructor if necessary
-
+  HashNode(){};
+  HashNode(unsigned long key, unsigned long value);
   unsigned long getKey() { return key; }
   unsigned long getValue() { return value; }
-  void assign(unsigned long key, unsigned long value); 
+  void assign(unsigned long key, unsigned long value);
 
   // extend if necessary
 };
 
-/* 
-   Implement the assign method 
+inline HashNode::HashNode(unsigned long key, unsigned long value){
+  this->key = key;
+  this->value = value;
+}
+inline void HashNode::assign (unsigned long key, unsigned long value){
+  this->key = key;
+  this->value = value;
+}
+
+
+/* Implement the assign method
    and any methods that you may additionally need for the HashTable to work.
 */
 
