@@ -64,8 +64,11 @@ inline  HashTable::HashTable(size_t number){
   }
 
   inline void HashTable::insert(ulint key ,ulint value){
+  	cout << "ins-1" << endl;
      HashNode *temp = new HashNode(key,value);
+     cout << "ins0" << endl;
      size_t pos = hash_function(key);
+     cout << "ins1" << endl;
      list<HashNode> mylist= this->table->at(pos);
 
      for (list<HashNode>::iterator it=mylist.begin(); it != mylist.end(); ++it){
@@ -73,9 +76,10 @@ inline  HashTable::HashTable(size_t number){
          throw DUPLICATE_KEY;
        }
      }
+     cout << key << endl;
      this->table->at(pos).push_back(*temp);
-
-  }
+     num++;
+ }
 
   inline ulint HashTable::getValue(ulint key ){
     size_t hashPos = hash_function(key);
@@ -86,8 +90,44 @@ inline  HashTable::HashTable(size_t number){
         return (*it).getValue();
       }
   }
- return KEY_NOT_FOUND;
+ 	throw KEY_NOT_FOUND;
 }
+
+inline void HashTable::rehash(size_t newSize){
+	cout << "8====D11" << endl;
+	Table newTable = *table;
+	cout << "8====D12" << endl;
+	table->clear();
+	cout << "8====D13" << endl;
+	table->resize(newSize);
+	cout << "8====D14" << endl;
+		for(list<HashNode> &hash: newTable){
+			cout << "8====D15" << endl;
+			for (HashNode &node : hash) {
+				cout << "8====D16" << endl;
+				cout << node.getKey() << endl;
+				insert(node.getKey(), node.getValue());
+		}
+	}
+		
+}
+
+inline void HashTable::erase(ulint key){
+	cout << "erase" << endl;
+size_t hashPos = hash_function(key);
+    list<HashNode> mylist= this->table->at(hashPos);
+
+    for (list<HashNode>::iterator it=mylist.begin(); it != mylist.end(); ++it){
+    	cout << "in iterator" << endl;
+      if((it)->getKey() == key){
+      	cout << it->getKey() << endl;
+      mylist.erase(it);
+      num--;
+      return;
+      }
+  }
+ throw KEY_NOT_FOUND;
+} 
 /* Implement the
 - Constructors, Destructor
 - hash_function, insert, getValue methods

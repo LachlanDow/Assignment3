@@ -6,8 +6,11 @@
 using namespace std;
 
 bool test2() {
+  
   HashTable T1(117); 
+   
   size_t s;
+  
 
   T1.insert(14598,17);
   T1.insert(234,19);
