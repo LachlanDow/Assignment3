@@ -4,9 +4,23 @@
 #include <random>
 #include "HashTable.h"
 
+HashTable Ord = new HashTable();
 
 /* Implement mc_dlog in this file */
 
+
+int ordG(int g, int n){
+  int r = rand() % n;
+  ulint y =(ulint)pow(g,r) % n;
+  HashNode node = new HashNode(Ord.hash_function(y),r);
+
+  if (Ord.getKey(node.getKey) != 0){
+      if(ord.getValue(y)-r >0){
+        return
+      }
+  }
+
+}
 //intialises table to size of  1
  HashTable::HashTable(){
  cout << "constucting"<< endl;
@@ -66,6 +80,7 @@ void HashTable::insert(ulint key ,ulint value){
        return it->getValue();
      }
  }
+ else return 0;
   throw KEY_NOT_FOUND;
 }
 
@@ -99,7 +114,7 @@ size_t hashPos = hash_function(key);
    for ( it =mylist->begin(); it != mylist->end(); ++it){
     cout << "in iterator" << endl;
      if(it->getKey() == key){
-      cout << it->getKey() << endl;
+     cout << it->getKey() << endl;
      mylist->erase(it);
      num--;
      return;
@@ -108,3 +123,5 @@ size_t hashPos = hash_function(key);
 throw KEY_NOT_FOUND;
 
 }
+void ordG()
+ order
