@@ -10,16 +10,25 @@ HashTable Ord = new HashTable();
 
 
 int ordG(int g, int n){
+
+  for(int i = 0; i < sqrt(n); i++){
   int r = rand() % n;
   ulint y =(ulint)pow(g,r) % n;
   HashNode node = new HashNode(Ord.hash_function(y),r);
 
-  if (Ord.getKey(node.getKey) != 0){
-      if(ord.getValue(y)-r >0){
-        return
+  if (Ord.getKey(node.getKey)){
+      if(Ord.getValue(y)-r > 0){
+        return Ord.getValue(y)-r;
       }
-  }
+      else if (r - Ord.getValue(y) > 0){
+        return r - Ord.getValue(y);
+      }
+      else{
+        Ord.insert(Ord.hash_function(y),r);
+      }
 
+  }
+}
 }
 //intialises table to size of  1
  HashTable::HashTable(){
@@ -80,7 +89,6 @@ void HashTable::insert(ulint key ,ulint value){
        return it->getValue();
      }
  }
- else return 0;
   throw KEY_NOT_FOUND;
 }
 
