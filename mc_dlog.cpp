@@ -3,92 +3,109 @@
 #include <ctime>
 #include <random>
 #include "HashTable.h"
-
-
+ulint intpow(ulint base,ulint exp){
+  if(exp == 0){
+    return 1;
+  }
+  else if (exp == 1){
+    return base;
+  }
+  else if (exp != 1){
+    return base * intpow(base * base, exp / 2);
+  }
+  else{
+    return intpow(base * base, exp / 2);
+  }
+}
 
 HashTable Ord = HashTable();
 
-int order(int x, int n)
+ulint order(ulint x, ulint n)
 {
-	for(int i=0; i<=sqrt(n); i++)
+	for(ulint i=0; i<=sqrt(n); i++)
 	{
-		int random = rand() % n;
 
-		int y = (int) pow( x, random) % n;
+
+    default_random_engine  e(static_cast<ulint>(time(0)));
+    uniform_int_distribution<ulint> d1(1,(n-2));
+
+	  ulint random = d1(e);
+
+		ulint y = intpow( x, random) % n;
 
 	 	if(Ord.check(y)==true)
 	 	{
-	 		int index = Ord.hash_function(y);
+	 		ulint index = Ord.hash_function(y);
 
-	 		if( (random-index) > 0 || (index-random) > 0 )
-	 		{
-	 			if( (random-index) > (index-random) )
+
+	 			if( (random) > (index) )
 	 			{
 	 				return (random-index);
 	 			}
-	 			if( (index-random) > (random-index) )
+	 			else if( (index) > (random) )
 	 			{
 	 				return (index-random);
-	 			}
-	 		}
-	 		else
-	 		{
-	 			continue;
-	 		}
-	 	}
+	 			}}
+
 	 	else
-	 	{
-	 		Ord.insert( y, random );
-	 	}
- 	}
+	 	 {
+      Ord.insert( y, random );
+	 	 }
  	return n-1;
+  }
 }
 
 HashTable A = HashTable();
 HashTable B = HashTable();
 
-int discrete(int x, int n, int a)
+ulint discrete(ulint x, ulint n, ulint a)
 {
-	for(int i=0; i<=sqrt(n); i++)
+  default_random_engine e(static_cast<ulint> (time(0)));
+  uniform_int_distribution<ulint> d1(1,(n-2));
+
+	for(ulint i=0; i<=sqrt(n); i++)
 	{
-		int random = rand() % n;
+		ulint random = d1(e);
 
-		int z = (int) pow( x, random) % n;
+		ulint z = intpow( x, random) % n;
 
-		int y = a * z;
+		ulint y = a * z;
 
 		if(B.check(y)==true)
 		{
-			int index2 = (B.hash_function(y) - random);
-			return index2;
-		}
+			ulint index2 = (B.hash_function(y) - random);
+      return index2;
+    }
 		else
 		{
 			A.insert( y, random );
 		}
 
-		int random2 = rand() % n;
+		ulint random2 = d1(e);
+
+    z =  intpow( x, random2);
 
 		if(A.check(z)==true)
 		{
-			int index3 = random2 - A.hash_function(z);
-			return index3;
-		}
+			ulint index3 = random2 - A.hash_function(z);
+      cout << index3 << endl;
+      return index3;
+    }
 		else
 		{
 			B.insert( y, random2);
 		}
 	}
-	return 0;
 }
 
-int combine(int x, int n, int a)
+int combine(ulint x, ulint n, ulint a)
 {
-	int s = order(x , n);
+  cout << x << n <<a << endl;
+	ulint s = order(x , n);
+  cout << s << endl;
+	ulint t = discrete(x, n, a);
 
-	int t = discrete(x, n, a);
-
-	int u = t % s;
+	ulint u = t % s;
 
 	if( u < 0 )
 	{
@@ -101,6 +118,8 @@ int combine(int x, int n, int a)
 	}
 }
 
+
+
 int main(int argc, char** argv)
 {
 	if(argc>4)
@@ -109,16 +128,12 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		int x, n, a;
+		ulint x, n, a;
         stringstream(argv[1]) >> x;
         stringstream(argv[2]) >> n;
         stringstream(argv[3]) >> a;
-        int d=1;
-        int e=1;
-        int b = combine(x, n, a);
-        cout << b << endl;
-        int f = order(d, e);
-        cout << f << endl;
+        cout << x << n <<a << endl;
+        cout << combine(x,n,a) << endl;
     }
     return 0;
 }
@@ -126,4 +141,4 @@ int main(int argc, char** argv)
 
 
 
-//intialises table to size of  1
+//ulintialises table to size of  1

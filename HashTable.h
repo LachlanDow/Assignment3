@@ -32,9 +32,10 @@ public:
   void rehash(size_t); // sets a new size for the hash table, rehashes the hash table
   bool check(ulint);
 
-  int order(int x, int n);
-  int discrete(int x, int n, int a);
-  int combine(int x, int n, int a);
+  ulint order(int x, int n);
+  ulint discrete(int x, int n, int a);
+  ulint combine(int x, int n, int a);
+  ulint intpow(ulint,ulint);
 
   // extend if necessary
 };
