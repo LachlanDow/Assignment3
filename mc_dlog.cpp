@@ -4,132 +4,126 @@
 #include <random>
 #include "HashTable.h"
 
-HashTable Ord = new HashTable();
 
+
+HashTable Ord = HashTable();
+
+int order(int x, int n)
+{
+	for(int i=0; i<=sqrt(n); i++)
+	{
+		int random = rand() % n;
+
+		int y = (int) pow( x, random) % n;
+
+	 	if(Ord.check(y)==true)
+	 	{
+	 		int index = Ord.hash_function(y);
+
+	 		if( (random-index) > 0 || (index-random) > 0 )
+	 		{
+	 			if( (random-index) > (index-random) )
+	 			{
+	 				return (random-index);
+	 			}
+	 			if( (index-random) > (random-index) )
+	 			{
+	 				return (index-random);
+	 			}
+	 		}
+	 		else
+	 		{
+	 			continue;
+	 		}
+	 	}
+	 	else
+	 	{
+	 		Ord.insert( y, random );
+	 	}
+ 	}
+ 	return n-1;
+}
+
+HashTable A = HashTable();
+HashTable B = HashTable();
+
+int discrete(int x, int n, int a)
+{
+	for(int i=0; i<=sqrt(n); i++)
+	{
+		int random = rand() % n;
+
+		int z = (int) pow( x, random) % n;
+
+		int y = a * z;
+
+		if(B.check(y)==true)
+		{
+			int index2 = (B.hash_function(y) - random);
+			return index2;
+		}
+		else
+		{
+			A.insert( y, random );
+		}
+
+		int random2 = rand() % n;
+
+		if(A.check(z)==true)
+		{
+			int index3 = random2 - A.hash_function(z);
+			return index3;
+		}
+		else
+		{
+			B.insert( y, random2);
+		}
+	}
+	return 0;
+}
+
+int combine(int x, int n, int a)
+{
+	int s = order(x , n);
+
+	int t = discrete(x, n, a);
+
+	int u = t % s;
+
+	if( u < 0 )
+	{
+		u = u + s;
+		return u;
+	}
+	else
+	{
+		return u;
+	}
+}
+
+int main(int argc, char** argv)
+{
+	if(argc>4)
+	{
+		cout<<"The amount of parameters is incorrect, please try again.";
+	}
+	else
+	{
+		int x, n, a;
+        stringstream(argv[1]) >> x;
+        stringstream(argv[2]) >> n;
+        stringstream(argv[3]) >> a;
+        int d=1;
+        int e=1;
+        int b = combine(x, n, a);
+        cout << b << endl;
+        int f = order(d, e);
+        cout << f << endl;
+    }
+    return 0;
+}
 /* Implement mc_dlog in this file */
 
 
-int ordG(int g, int n){
 
-  for(int i = 0; i < sqrt(n); i++){
-  int r = rand() % n;
-  ulint y =(ulint)pow(g,r) % n;
-  HashNode node = new HashNode(Ord.hash_function(y),r);
-
-  if (Ord.getKey(node.getKey)){
-      if(Ord.getValue(y)-r > 0){
-        return Ord.getValue(y)-r;
-      }
-      else if (r - Ord.getValue(y) > 0){
-        return r - Ord.getValue(y);
-      }
-      else{
-        Ord.insert(Ord.hash_function(y),r);
-      }
-
-  }
-}
-}
 //intialises table to size of  1
- HashTable::HashTable(){
- cout << "constucting"<< endl;
- Table *temp = new Table(11,list<HashNode>());
- this->table = temp;
- this->num = 0;
-
- }
-
- HashTable::HashTable(size_t number){
-   cout << "constucting";
-   Table *temp = new Table(number, list<HashNode>());
-   this->table = temp;
-   this->num = 0;
-
- }
-
-  size_t HashTable::size(){
-   return this->table->size();
- }
-
-HashTable::~HashTable(){
-   delete this->table;
- }
-
-size_t HashTable::hash_function(ulint key){
-   return key % this->table->size();
- }
-
-void HashTable::insert(ulint key ,ulint value){
-  cout << "ins-1" << endl;
-    HashNode temp(key,value);
-    cout << "ins0" << endl;
-    list<HashNode> *mylist;
-    mylist = &(table->at(hash_function(key)));
-
-    for (list<HashNode>::iterator it=mylist->begin(); it != mylist->end(); ++it){
-      cout << "in bitch" << "it key is:"<<it->getKey() << "Key is:"<<key<< endl;
-      if(it->getKey() == key){
-        throw "Duplicate Key";
-      }
-    }
-    cout << key << endl;
-    mylist->push_back(temp);
-    num++;
-    if (9 * num >= 10 * size()) {
-		rehash(8*size()+1); //+1 to make it a prime again
-}
-}
-
- ulint HashTable::getValue(ulint key ){
-   size_t hashPos = hash_function(key);
-   list<HashNode> mylist= this->table->at(hashPos);
-
-   for (list<HashNode>::iterator it=mylist.begin(); it != mylist.end(); ++it){
-     if(it->getKey() == key){
-       return it->getValue();
-     }
- }
-  throw KEY_NOT_FOUND;
-}
-
-void HashTable::rehash(size_t newSize){
-cout << "8====D11" << endl;
-Table oldTable = *table;
-cout << "8====D12" << endl;
-table->clear();
-cout << "8====D13" << endl;
-table->resize(newSize);
-cout << "8====D14" << endl;
-  for(list<HashNode> &hash: oldTable){
-    cout << "8====D15" << endl;
-    for (HashNode &node : hash) {
-      cout << "8====D16" << endl;
-      cout << node.getKey() << endl;
-      insert(node.getKey(), node.getValue());
-  }
-}
-
-}
-
-void HashTable::erase(ulint key){
-cout << "erase" << endl;
-size_t hashPos = hash_function(key);
-   list<HashNode> *mylist;
-   mylist = &(table->at(hashPos));
-
-
-   list<HashNode>::iterator it;
-   for ( it =mylist->begin(); it != mylist->end(); ++it){
-    cout << "in iterator" << endl;
-     if(it->getKey() == key){
-     cout << it->getKey() << endl;
-     mylist->erase(it);
-     num--;
-     return;
-     }
- }
-throw KEY_NOT_FOUND;
-
-}
-void ordG()
- order
